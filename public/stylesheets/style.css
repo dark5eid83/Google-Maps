@@ -1,0 +1,9 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+
+.btn-primary {
+  background-color: rgb(182, 121, 218);
+}
