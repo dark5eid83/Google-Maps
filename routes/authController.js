@@ -35,6 +35,16 @@ module.exports.set = app => {
      * Note: This is NOT secure
      */
     app.post('/signup', (req, res) => {
+        //Check through all the form fields make sure none are empty
+        for(let prop in req.body) {
+            if(req.body[prop].length === 0) {
+                res.render('register', {
+                    errors: [`The Form field: ${prop} was left blank`]
+                })
+            }
+        }
+
+        //Check and make sure the the passwords are the same
         if(req.body.password === req.body.confirm) {
             users.create({
                 username: req.body.username,
@@ -44,7 +54,7 @@ module.exports.set = app => {
             });
         } else {
             res.render('register', {
-                errors: ["Your Passwords must match"]
+                errors: ["Your Passwords must match!"]
             })
         }
     });

@@ -19,7 +19,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 app.use(bodyParser.json());
-app.use(session({ secret: process.env.EXPRESS_SESSION_SECRET }));
+app.use(session({ secret: process.env.EXPRESS_SESSION_SECRET, resave: true, saveUninitialized: true }));
 app.use(bodyParser.urlencoded({ extended: false }));
 //We initialize our passport sessions here
 app.use(passport.initialize());
