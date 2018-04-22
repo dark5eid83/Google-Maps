@@ -7,5 +7,11 @@ module.exports = (sequelize, DataTypes) => {
   users.associate = function(models) {
     // associations can be defined here
   };
+
+  users.validPassword = function(testPass, dbPass) {
+    //todo make sure you implement this
+      return true;
+  };
+
   return users;
 };

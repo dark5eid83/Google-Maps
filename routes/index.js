@@ -11,7 +11,8 @@ router.get('/', (req, res) => {
          res.render('index', {
              key: process.env.GOOGLE_API_KEY,
              location: req.query.location,
-             searches: result
+             searches: result,
+             user: req.user
          });
      });
 });

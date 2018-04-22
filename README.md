@@ -38,6 +38,16 @@ Once you've got the file created paste this line `GOOGLE_API_KEY=YOUR_GOOGLE_API
 
 Unit tests are still being written!
 
+
+## Common Ways to Get Started
+
+### Creating a new Route/Page
+
+- go into `/routes/routeController` and add your new express route
+- in the new express route ensure your `res.render('your_view')`
+- create the new ejs view in the `views/` directory
+- update links in the navbar/other pages to point to your route
+
 ## Deployment
 
 This application can be deployed onto any machine with Node 6.0.0 or greater is installed.
