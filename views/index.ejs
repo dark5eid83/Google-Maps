@@ -25,7 +25,11 @@
 
         <div class="jumbotron jumbotron-fluid">
           <div class="container">
-            <h1 class="display-4">fOO</h1>
+              <% if(typeof user !== 'undefined') {%>
+                <h1 class="display-4">Hello, <%= user.username %></h1>
+              <% } else { %>
+              <h1 class="display-4">Please Log In</h1>
+              <% }%>
             <p class="lead">Some lead text about the jumbotron and its purpose can go here</p>
           </div>
         </div>

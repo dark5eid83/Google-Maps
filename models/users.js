@@ -1,4 +1,6 @@
 'use strict';
+let bcrypt = require('bcrypt');
+
 module.exports = (sequelize, DataTypes) => {
   var users = sequelize.define('users', {
     username: DataTypes.STRING,
@@ -9,8 +11,7 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   users.validPassword = function(testPass, dbPass) {
-    //todo make sure you implement this
-      return true;
+      return bcrypt.compareSync(testPass, dbPass);
   };
 
   return users;

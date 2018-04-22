@@ -6,6 +6,10 @@ const { searches, users } = require('../models');
  * Handles showing the Home page/index route
  */
 router.get('/', (req, res) => {
+    if(!req.query.location) {
+        req.query.location = 'China'; //Set default location if its not set
+    }
+
      //Default location is set to Seattle Washington
      searches.all().then(result => {
          res.render('index', {
