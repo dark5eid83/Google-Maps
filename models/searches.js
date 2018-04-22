@@ -4,7 +4,9 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING
   }, {});
   searches.associate = function(models) {
-    // associations can be defined here
+    searches.belongsTo(models.users, {
+      foreignKey: 'user_id'
+    })
   };
   return searches;
 };

@@ -10,7 +10,7 @@ const passport = require('passport'), LocalStrategy = require('passport-local').
 let {users} = require('./models');
 
 const index = require('./routes/index');
-const controller = require('./routes/routeController');
+const controller = require('./routes/authController');
 
 const app = express();
 
@@ -21,6 +21,7 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.json());
 app.use(session({ secret: process.env.EXPRESS_SESSION_SECRET }));
 app.use(bodyParser.urlencoded({ extended: false }));
+//We initialize our passport sessions here
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(cookieParser());
@@ -28,6 +29,14 @@ app.use(cookieParser());
 //Very important to serve all the files in the public directly statically!
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+/**
+ * Handles the authentication portion of a user
+ * - Finds the user from the database
+ * - Validates they exist
+ * - Validates the users password matches the hash in the DB
+ * - tell passport (done(null, user)) when everything checks out
+ */
 passport.use(new LocalStrategy(function(username, password, done) {
         users.findOne({ where: {username} }).then(user => {
                 if (!user) {
@@ -55,17 +64,11 @@ passport.deserializeUser(function(id, done) {
     });
 });
 
-
+/**
+ * Routes for the pages and handling users logging in
+ */
 app.use('/', index);
-
-app.post('/login', passport.authenticate('local'),
-    (req, res) => {
-        // If this function gets called, authentication was successful.
-        // `req.user` contains the authenticated user.
-        res.redirect('/');
-});
-
-
+app.post('/login', passport.authenticate('local'), (req, res) => res.redirect('/dashboard'));
 controller.set(app);
 
 // catch 404 and forward to error handler

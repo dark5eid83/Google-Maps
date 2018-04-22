@@ -8,20 +8,8 @@
   </head>
   <body>
     <div class="container-fluid">
-      <nav class="site-header sticky-top py-1">
-        <div class="container d-flex flex-column flex-md-row justify-content-between">
-          <a class="py-2" href="#">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="d-block mx-auto"><circle cx="12" cy="12" r="10"></circle><line x1="14.31" y1="8" x2="20.05" y2="17.94"></line><line x1="9.69" y1="8" x2="21.17" y2="8"></line><line x1="7.38" y1="12" x2="13.12" y2="2.06"></line><line x1="9.69" y1="16" x2="3.95" y2="6.06"></line><line x1="14.31" y1="16" x2="2.83" y2="16"></line><line x1="16.62" y1="12" x2="10.88" y2="21.94"></line></svg>
-          </a>
-          <a class="py-2 d-none d-md-inline-block" href="/?location=China">Home</a>
-          <a class="py-2 d-none d-md-inline-block" href="/login">Login</a>
-          <a class="py-2 d-none d-md-inline-block" href="#">Features</a>
-          <a class="py-2 d-none d-md-inline-block" href="#">Enterprise</a>
-          <a class="py-2 d-none d-md-inline-block" href="#">Support</a>
-          <a class="py-2 d-none d-md-inline-block" href="#">Pricing</a>
-          <a class="py-2 d-none d-md-inline-block" href="#">Cart</a>
-        </div>
-      </nav>
+
+        <% include ./partials/navbar.ejs %>
 
         <div class="jumbotron jumbotron-fluid">
           <div class="container">
@@ -30,42 +18,10 @@
               <% } else { %>
               <h1 class="display-4">Please Log In</h1>
               <% }%>
-            <p class="lead">Some lead text about the jumbotron and its purpose can go here</p>
+            <p class="lead">Find your next vacation with Google's new maps! <a href="/dashboard">Check it out!</a></p>
           </div>
         </div>
 
-      <div class="row justify-content-center">
-        <div class="col-3 offset-1">
-          <h5>Search Google Maps</h5>
-          <!--Form that updates the Map-->
-          <form method="post" action="/place">
-            <div class="form-group">
-              <input type="text" name="location" class="form-control" aria-describedby="emailHelp" placeholder="Enter place to Visit">
-              <small id="emailHelp" class="form-text text-muted">Search places around the World</small>
-            </div>
-            <button type="submit" class="btn btn-primary">Submit <span class="fas fa-arrow-right" /></button>
-          </form>
-
-          <!--Nested row within this column-->
-          <div class="row">
-            <div class="col-12">
-              <h5 class="mt-4">Your Searches</h5>
-              <ul class="list-group">
-                <% searches.forEach(search => {%>
-                <li class="list-group-item"><span class="fas fa-compass"></span> <%= search.name %></li>
-                <% })%>
-              </ul>
-            </div>
-          </div>
-
-        </div>
-        <div class="col-6">
-          <div class="iframe-wrapper">
-            <iframe width="600" height="450" style="border:0" src="https://www.google.com/maps/embed/v1/place?key=<%= key %>&q=<%= location %>" allowfullscreen>
-            </iframe>
-          </div>
-        </div>
-      </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
