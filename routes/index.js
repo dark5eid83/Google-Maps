@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-
+const { searches, users } = require('../models');
 
 /**
  * Handles showing the Home page/index route

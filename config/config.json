@@ -1,6 +1,6 @@
 {
   "development": {
-    "database": "google_api",
+    "database": "google_maps",
     "host": "127.0.0.1",
     "dialect": "postgres"
   }
