@@ -48,6 +48,12 @@ Unit tests are still being written!
 - create the new ejs view in the `views/` directory
 - update links in the navbar/other pages to point to your route
 
+### Creating a new User and Logging In
+
+- To Create a new user go to the sign in page and submit the form!
+- Note: The database must be operational for this to work
+- You can login with your newly created credentials
+
 ## Deployment
 
 This application can be deployed onto any machine with Node 6.0.0 or greater is installed.

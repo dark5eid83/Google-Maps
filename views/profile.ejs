@@ -5,13 +5,23 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
     <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet" href="/stylesheets/profile.css" />
 </head>
 <body>
 <div class="container-fluid">
-
     <% include ./partials/navbar.ejs %>
 
-
+    <div class="row mt-4">
+        <div class="col-md-2 offset-md-1">
+            <!--Profile pic goes here-->
+            <img src="<%= user.profile_picture %>" class="img-thumbnail rounded-circle icon-circle">
+        </div>
+        <div class="col-md-6">
+            <!--Title and Subtitle go here-->
+            <h2><%= user.username %></h2>
+            <p class="font-weight-light"><%= user.bio %></p>
+        </div>
+    </div>
 
     <% include ./partials/footer.ejs %>
 </div>

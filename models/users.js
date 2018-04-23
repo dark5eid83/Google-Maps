@@ -4,7 +4,9 @@ let bcrypt = require('bcrypt');
 module.exports = (sequelize, DataTypes) => {
   var users = sequelize.define('users', {
     username: DataTypes.STRING,
-    password: DataTypes.STRING
+    password: DataTypes.STRING,
+    bio: DataTypes.STRING,
+    profile_picture: DataTypes.STRING
   }, {});
   users.associate = function(models) {
      users.hasMany(models.searches, {

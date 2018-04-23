@@ -48,7 +48,9 @@ module.exports.set = app => {
         if(req.body.password === req.body.confirm) {
             users.create({
                 username: req.body.username,
-                password: bcrypt.hashSync(req.body.password, 10) //Notice how we hash the password before storing it
+                password: bcrypt.hashSync(req.body.password, 10), //Notice how we hash the password before storing it
+                bio: '',
+                profile_picture: 'https://i.stack.imgur.com/l60Hf.png'
             }).then(() => {
                res.redirect('/login');
             });

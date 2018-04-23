@@ -35,6 +35,13 @@ router.get('/dashboard', Auth.make, (req, res) => {
 });
 
 
+router.get('/profile', Auth.make, (req, res) => {
+    res.render('profile', {
+        user: req.user
+    })
+});
+
+
 /**
  * Handles the form being submitted.
  */
