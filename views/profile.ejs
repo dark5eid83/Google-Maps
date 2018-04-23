@@ -23,35 +23,10 @@
         </div>
     </div>
 
-    <!--This is where all the errors are located-->
-    <div class="row mt-4">
-        <div class="col-md-4 offset-md-2">
-            <% errors.forEach(error => {%>
-            <div class="alert alert-danger" role="alert">
-                <h3>Error <span class="fas fa-exclamation-triangle"></span></h3>
-                <hr>
-                <ul>
-                    <li><%= error %></li>
-                </ul>
-            </div>
-            <% }) %>
-        </div>
-    </div>
+    <!--Include alerts for our form callbacks-->
+    <% include ./partials/error-alert.ejs %>
+    <% include ./partials/success-alert.ejs %>
 
-    <!--This is where all the success messages are located -->
-    <div class="row mt-4">
-        <div class="col-md-4 offset-md-2">
-            <% success.forEach(s => {%>
-            <div class="alert alert-success" role="alert">
-                <h3>Success <span class="fas fa-check"></span></h3>
-                <hr>
-                <ul>
-                    <li><%= s %></li>
-                </ul>
-            </div>
-            <% }) %>
-        </div>
-    </div>
     <!--Row for the Password update form -->
     <div class="row">
         <div class="col-md-3 offset-md-2">

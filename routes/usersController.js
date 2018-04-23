@@ -9,10 +9,20 @@ module.exports.set = app => {
     app.get('/login', (req, res) => {
         //Redirect a logged in user home no need for them to log in again
         if(req.user) {
-            res.redirect('/');
+            res.redirect('/dashboard');
         } else {
-            //Show a non-logged in user the signin page
-            res.render('signin', {});
+            //If there is an error on this request aka user has just attempted to login
+            //and got their credentials wrong
+            if(req.query.error) {
+               res.render('signin', {
+                   errors: ['Incorrect Credentials Please Try Again.']
+               })
+            } else {
+                //Show a non-logged in user the signin page
+                res.render('signin', {
+                    errors: []
+                });
+            }
         }
     });
 

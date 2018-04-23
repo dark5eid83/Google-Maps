@@ -68,7 +68,7 @@ passport.deserializeUser(function(id, done) {
  * Routes for the pages and handling users logging in
  */
 app.use('/', index);
-app.post('/login', passport.authenticate('local'), (req, res) => res.redirect('/dashboard'));
+app.post('/login', passport.authenticate('local', {successRedirect:'/dashboard', failureRedirect: '/login?error=true'}), (req, res) => res.redirect('/dashboard'));
 controller.set(app);
 
 // catch 404 and forward to error handler
