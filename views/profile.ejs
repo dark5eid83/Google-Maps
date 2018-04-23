@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Google Maps</title>
+    <title>Google Maps - Profile</title>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
     <link rel='stylesheet' href='/stylesheets/style.css' />
@@ -12,7 +12,7 @@
     <% include ./partials/navbar.ejs %>
 
     <div class="row mt-4">
-        <div class="col-md-2 offset-md-1">
+        <div class="col-md-2 offset-md-2">
             <!--Profile pic goes here-->
             <img src="<%= user.profile_picture %>" class="img-thumbnail rounded-circle icon-circle">
         </div>
@@ -20,6 +20,63 @@
             <!--Title and Subtitle go here-->
             <h2><%= user.username %></h2>
             <p class="font-weight-light"><%= user.bio %></p>
+        </div>
+    </div>
+
+    <!--This is where all the errors are located-->
+    <div class="row mt-4">
+        <div class="col-md-4 offset-md-2">
+            <% errors.forEach(error => {%>
+            <div class="alert alert-danger" role="alert">
+                <h3>Error <span class="fas fa-exclamation-triangle"></span></h3>
+                <hr>
+                <ul>
+                    <li><%= error %></li>
+                </ul>
+            </div>
+            <% }) %>
+        </div>
+    </div>
+
+    <!--This is where all the success messages are located -->
+    <div class="row mt-4">
+        <div class="col-md-4 offset-md-2">
+            <% success.forEach(s => {%>
+            <div class="alert alert-success" role="alert">
+                <h3>Success <span class="fas fa-check"></span></h3>
+                <hr>
+                <ul>
+                    <li><%= s %></li>
+                </ul>
+            </div>
+            <% }) %>
+        </div>
+    </div>
+    <!--Row for the Password update form -->
+    <div class="row">
+        <div class="col-md-3 offset-md-2">
+            <form action="/update/password" method="post">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">New Password</label>
+                    <input type="password" name="password" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="New Password">
+                    <small id="emailHelp" class="form-text text-muted">New password</small>
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputPassword1">Confirm Password</label>
+                    <input type="password" class="form-control" name="confirm" id="exampleInputPassword1" placeholder="Confirm Password">
+                </div>
+                <button type="submit" class="btn btn-primary">Update Password</button>
+            </form>
+        </div>
+        <div class="col-md-3">
+            <form action="/update/bio" method="post">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">New Bio</label>
+                    <input type="text" name="bio" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Biography">
+                    <small id="emailHelp" class="form-text text-muted">New Biography</small>
+                </div>
+                <button type="submit" class="btn btn-primary">Update Bio</button>
+            </form>
         </div>
     </div>
 

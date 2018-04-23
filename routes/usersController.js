@@ -62,6 +62,62 @@ module.exports.set = app => {
     });
 
     /**
+     * Handles updating a users password
+     */
+    app.post('/update/password', Auth.make, (req, res) => {
+        for(let prop in req.body) {
+            if(req.body[prop].length === 0) {
+                res.render('profile', {
+                    user: req.user,
+                    errors: [`The Form field: ${prop} was left blank`],
+                    success: []
+                });
+            }
+        }
+
+        if(req.body.password === req.body.confirm) {
+            users.update({
+                password: bcrypt.hashSync(req.body.password, 10)
+            }, {where: {id: req.user.id}}).then(() => {
+               res.render('profile', {
+                   user: req.user,
+                   errors:[],
+                   success: ['Information saved successfully']
+               })
+            });
+        } else {
+            res.render('profile', {
+                user: req.user,
+                errors: [`The passwords must match!`],
+                success: []
+            })
+        }
+    });
+
+    /**
+     * Updates a users biography
+     */
+    app.post('/update/bio', Auth.make, (req, res) => {
+        if(req.body.bio.length > 0) {
+            users.update({
+                bio: req.body.bio
+            }, {where: {id: req.user.id}}).then(() => {
+               res.render('profile', {
+                   user: req.user,
+                   errors: [],
+                   success: ['Your Biography was updated successfully!']
+               })
+            });
+        } else {
+            res.render('profile', {
+                user: req.user,
+                errors: ['The biography field cant be blank!'],
+                success: []
+            })
+        }
+    });
+
+    /**
      * Handles logging a user out
      */
     app.get('/logout', (req, res) => {

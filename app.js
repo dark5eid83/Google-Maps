@@ -10,7 +10,7 @@ const passport = require('passport'), LocalStrategy = require('passport-local').
 let {users} = require('./models');
 
 const index = require('./routes/index');
-const controller = require('./routes/authController');
+const controller = require('./routes/usersController');
 
 const app = express();
 

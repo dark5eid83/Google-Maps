@@ -34,10 +34,16 @@ router.get('/dashboard', Auth.make, (req, res) => {
     });
 });
 
-
+/**
+ * Shows the user profile page
+ *
+ * Must be behind the authentication gateway
+ */
 router.get('/profile', Auth.make, (req, res) => {
     res.render('profile', {
-        user: req.user
+        user: req.user,
+        errors: [],
+        success: []
     })
 });
 
