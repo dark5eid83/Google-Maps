@@ -32,25 +32,39 @@
         <div class="col-md-3 offset-md-2">
             <form action="/update/password" method="post">
                 <div class="form-group">
-                    <label for="exampleInputEmail1">New Password</label>
-                    <input type="password" name="password" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="New Password">
-                    <small id="emailHelp" class="form-text text-muted">New password</small>
+                    <label for="new-pass">New Password</label>
+                    <input type="password" name="password" class="form-control" id="new-pass" aria-describedby="emailHelp" placeholder="New Password">
+                    <small id="new-password" class="form-text text-muted">New password</small>
                 </div>
                 <div class="form-group">
-                    <label for="exampleInputPassword1">Confirm Password</label>
-                    <input type="password" class="form-control" name="confirm" id="exampleInputPassword1" placeholder="Confirm Password">
+                    <label for="confirm-pass">Confirm Password</label>
+                    <input type="password" class="form-control" name="confirm" id="confirm-pass" placeholder="Confirm Password">
                 </div>
                 <button type="submit" class="btn btn-primary">Update Password</button>
             </form>
         </div>
+        <!--This is the biography update portion fo the form-->
         <div class="col-md-3">
             <form action="/update/bio" method="post">
                 <div class="form-group">
-                    <label for="exampleInputEmail1">New Bio</label>
-                    <input type="text" name="bio" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Biography">
-                    <small id="emailHelp" class="form-text text-muted">New Biography</small>
+                    <label for="bio">New Bio</label>
+                    <input type="text" name="bio" class="form-control" id="bio" aria-describedby="emailHelp" placeholder="Enter Biography">
+                    <small id="bio-help" class="form-text text-muted">New Biography</small>
                 </div>
                 <button type="submit" class="btn btn-primary">Update Bio</button>
+            </form>
+        </div>
+        <!--This is the file upload part of the form-->
+        <div class="col-md-4">
+            <form method="post" enctype="multipart/form-data" action="/update/photo" >
+                <div class="form-group">
+                    <label for="exampleFormControlFile1" class="custom-file-upload">
+                        <i class="fa fa-cloud-upload"></i><i id="upload-text">Upload an Image</i>
+                    </label>
+                    <input type="file" class="form-control-file" name="avatar" id="exampleFormControlFile1" >
+                    <small class="form-text text-muted">Pick an image for your restaurant.</small>
+                    <button type="submit" class="btn btn-primary">Update Profile Picture</button>
+                </div>
             </form>
         </div>
     </div>
@@ -60,5 +74,15 @@
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+<script>
+    $(document).ready(() => {
+        console.log("Document Loaded");
+
+        //Whenever a new file is uploaded change the label to match to files name!
+        $(`input[type="file"]`).on('change', function() {
+            $("#upload-text").text(` ${$(this).val()}`);
+        });
+    });
+</script>
 </body>
 </html>

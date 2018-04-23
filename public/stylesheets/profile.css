@@ -1,7 +1,27 @@
+/* This is for displaying the user profile picture */
 .icon-circle{
     display:inline-block;
     padding: 4px;
     line-height: 80px;
     width: 150px;
     height: 150px;
+}
+
+/*
+ This styles the custom file upload for the users profile picture
+*/
+input[type="file"] {
+    display: none;
+}
+
+.custom-file-upload {
+    width:80%;
+    height:50px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border: 4px dashed #ccc;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
 }

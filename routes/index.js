@@ -14,7 +14,7 @@ router.get('/', (req, res) => {
 /**
  * Handles showing the dashboard page
  */
-router.get('/dashboard', Auth.make, (req, res) => {
+router.get('/dashboard', Auth.defend, (req, res) => {
     if(!req.query.location) {
         req.query.location = 'China'; //Set default location if its not set
     }
@@ -39,7 +39,7 @@ router.get('/dashboard', Auth.make, (req, res) => {
  *
  * Must be behind the authentication gateway
  */
-router.get('/profile', Auth.make, (req, res) => {
+router.get('/profile', Auth.defend, (req, res) => {
     res.render('profile', {
         user: req.user,
         errors: [],

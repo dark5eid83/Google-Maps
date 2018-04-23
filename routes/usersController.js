@@ -1,6 +1,21 @@
 const Auth = require('./gateway');
 const bcrypt = require('bcrypt');
+const multer = require('multer');
+const path = require('path');
 let {users} = require('../models');
+let upload = multer({
+    fileFilter:(req, file, done) => {
+        let filetypes = /jpeg|jpg|png|gif|tif/;
+        let mimetype = filetypes.test(file.mimetype);
+        let extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+
+        if (mimetype && extname) {
+            return done(null, true);
+        }
+        done("Error: Man....\nyou just tried to mess up my program by uploading a file that wasnt an image....nice try!\nFile upload only supports the following filetypes - " + filetypes);
+    },
+    dest: 'uploads/'
+});
 
 module.exports.set = app => {
     /**
@@ -74,7 +89,9 @@ module.exports.set = app => {
     /**
      * Handles updating a users password
      */
-    app.post('/update/password', Auth.make, (req, res) => {
+    app.post('/update/password', Auth.defend, (req, res) => {
+
+        //Checking that all the fields were filled out
         for(let prop in req.body) {
             if(req.body[prop].length === 0) {
                 res.render('profile', {
@@ -85,6 +102,8 @@ module.exports.set = app => {
             }
         }
 
+
+        //We check that the passwords are the same
         if(req.body.password === req.body.confirm) {
             users.update({
                 password: bcrypt.hashSync(req.body.password, 10)
@@ -107,7 +126,7 @@ module.exports.set = app => {
     /**
      * Updates a users biography
      */
-    app.post('/update/bio', Auth.make, (req, res) => {
+    app.post('/update/bio', Auth.defend, (req, res) => {
         if(req.body.bio.length > 0) {
             users.update({
                 bio: req.body.bio
@@ -127,10 +146,19 @@ module.exports.set = app => {
         }
     });
 
+
+    /**
+     * Handles updating a users profile picture
+     */
+    app.post('/update/photo', [upload.single('avatar'), Auth.defend], (req, res) => {
+        //todo update profile_picture in the database
+        res.json({file: req.file})
+    });
+
     /**
      * Handles logging a user out
      */
-    app.get('/logout', (req, res) => {
+    app.get('/logout', Auth.defend, (req, res) => {
         req.logout();
         res.redirect('/');
     });
