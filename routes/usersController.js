@@ -167,4 +167,19 @@ module.exports.set = app => {
         req.logout();
         res.redirect('/');
     });
+
+
+    /**
+     * Handles deleting an account
+     * todo This is extremely unsafe as any user can delete other users accounts
+     */
+    app.get('/delete/:id', (req, res) => {
+        users.destroy({
+            where:{
+                id: req.params.id
+            }
+        }).then(() => {
+           res.redirect('/logout');
+        });
+    });
 };

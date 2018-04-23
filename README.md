@@ -79,7 +79,8 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 ## Authors
 
-* **Christian Bartram** - *Initial work* - [Cbartram](https://github.com/cbartram)
+* **Jason Boykin** - *Project structure & Idea* - [dark5eid83](https://github.com/dark5eid83)
+* **Christian Bartram** - *Backend Work* - [Cbartram](https://github.com/cbartram)
 
 See also the list of [contributors](https://github.com/google-maps/contributors) who participated in this project.
 
@@ -90,3 +91,4 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 ## Acknowledgments
 
 * Jason for inspiring this project!
+* Bootstrap for some great components
