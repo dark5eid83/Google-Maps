@@ -15,10 +15,13 @@
           <div class="container">
               <% if(typeof user !== 'undefined') {%>
                 <h1 class="display-4">Hello, <%= user.username %></h1>
+                <p class="lead">Find your next vacation with Google's new maps!</p>
+                <a class="btn btn-primary" href="/dashboard">Dashboard</a>
               <% } else { %>
-              <h1 class="display-4">Please Log In</h1>
+              <h1 class="display-4">Google Maps</h1>
+              <p class="lead">Find your next vacation with Google's new maps!</p>
+              <a class="btn btn-primary" href="/signup">Create an Account</a>
               <% }%>
-            <p class="lead">Find your next vacation with Google's new maps! <a href="/dashboard">Check it out!</a></p>
           </div>
         </div>
 
