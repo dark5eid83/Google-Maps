@@ -25,11 +25,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(cookieParser());
-
-//Notice that we are now also serving everythig
-app.use(express.static(path.join(__dirname, 'uploads')));
-
-
 //Very important to serve all the files in the public directly statically!
 app.use(express.static(path.join(__dirname, 'public')));
 

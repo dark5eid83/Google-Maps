@@ -14,7 +14,7 @@ let upload = multer({
         }
         done("Error: Man....\nyou just tried to mess up my program by uploading a file that wasnt an image....nice try!\nFile upload only supports the following filetypes - " + filetypes);
     },
-    dest: 'uploads/'
+    dest: 'public/uploads/'
 });
 
 module.exports.set = app => {
@@ -151,8 +151,13 @@ module.exports.set = app => {
      * Handles updating a users profile picture
      */
     app.post('/update/photo', [upload.single('avatar'), Auth.defend], (req, res) => {
-        //todo update profile_picture in the database
-        res.json({file: req.file})
+        //updates profile_picture in the database
+        users.update({
+            profile_picture: `http://localhost:3000/uploads/${req.file.filename}`
+        }, {where: {id: req.user.id}}).then(() => {
+            //Redirect to profile when we are done
+            res.redirect('/profile')
+        });
     });
 
     /**
