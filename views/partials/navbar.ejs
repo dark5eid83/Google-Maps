@@ -12,7 +12,7 @@
                 <span class="badge badge-danger" style="border-radius:50%"><%= user.alerts.length %></span>
                 <% } %>
             </a>
-            <div class="dropdown-menu dropdown-menu-right" id="alert-menu" aria-labelledby="dropdownMenuButton">
+            <div class="dropdown-menu dropdown-menu-right alert-dropdown-menu" id="alert-menu" aria-labelledby="dropdownMenuButton">
                 <h5 class="dropdown-item">Alerts</h5>
                 <hr>
                 <% user.alerts.forEach(alert => {%>
@@ -25,7 +25,7 @@
         <a class="dropdown-toggle" style="" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <img style="border: 1px solid #b2bbbd; padding:4px; border-radius:50%" height="50" width="50" src="<%= user.profile_picture %>">
         </a>
-        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+        <div class="dropdown-menu dropdown-menu-right user-dropdown-menu" aria-labelledby="dropdownMenuButton">
             <h5 class="dropdown-item">Welcome, <%= user.username %></h5>
             <hr>
             <a class="dropdown-item" href="/dashboard"><i class="fas fa-chart-line"></i> Dashboard</a>
