@@ -3,11 +3,19 @@
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
+const chalk = require('chalk');
+const http = require('http');
+const _ = require('lodash');
+const io = require('socket.io');
+const port = process.env.PORT || '3000';
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const session = require("express-session");
 const passport = require('passport'), LocalStrategy = require('passport-local').Strategy;
 let {users} = require('./models');
+let WebsocketAPI = require('./src/emit');
+let emit = new WebsocketAPI();
+
 
 const index = require('./routes/index');
 const controller = require('./routes/usersController');
@@ -15,16 +23,19 @@ const controller = require('./routes/usersController');
 const app = express();
 
 // view engine setup
+app.set('port', port);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 app.use(bodyParser.json());
 app.use(session({ secret: process.env.EXPRESS_SESSION_SECRET, resave: true, saveUninitialized: true }));
 app.use(bodyParser.urlencoded({ extended: false }));
+
 //We initialize our passport sessions here
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(cookieParser());
+
 //Very important to serve all the files in the public directly statically!
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -68,7 +79,7 @@ passport.deserializeUser(function(id, done) {
  */
 app.use('/', index);
 app.post('/login', passport.authenticate('local', {successRedirect:'/dashboard', failureRedirect: '/login?error=true'}), (req, res) => res.redirect('/dashboard'));
-controller.set(app);
+controller.set(app, emit);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
@@ -88,4 +99,36 @@ app.use((err, req, res, next) => {
   res.render('error');
 });
 
-module.exports = app;
+let server = http.createServer(app);
+server.listen(port);
+
+server.on('listening', () => {
+    let addr = server.address();
+    let bind = typeof addr === 'string'
+        ? 'pipe ' + addr
+        : 'port ' + addr.port;
+    console.log(chalk.blue(`-----------------------------`));
+    console.log(chalk.blue(`Server Listening on ${bind}`));
+    console.log(chalk.blue(`-----------------------------`));
+});
+
+io(server).on('connection', (socket) => {
+    console.log(chalk.green('Client connected to websocket. \u2713'));
+    emit.addClient(socket);
+
+
+    /**
+     * Handles a websocket disconnecting from the server
+     */
+    socket.on('disconnect', () => {
+        let index = _.findIndex(emit.getClients(), o => {
+           return o.id === socket.id
+        });
+
+        console.log(chalk.red('Client Disconnected to websocket. ❌'));
+
+        emit.removeClient(index)
+
+    });
+});
+

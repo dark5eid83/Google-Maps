@@ -10,7 +10,6 @@ router.get('/', (req, res) => {
     res.render('index');
 });
 
-
 /**
  * Handles showing the dashboard page
  */

@@ -2,6 +2,7 @@ const Auth = require('./gateway');
 const bcrypt = require('bcrypt');
 const multer = require('multer');
 const path = require('path');
+const chalk = require('chalk');
 let {users} = require('../models');
 let upload = multer({
     fileFilter:(req, file, done) => {
@@ -17,7 +18,16 @@ let upload = multer({
     dest: 'public/uploads/'
 });
 
-module.exports.set = app => {
+//Passes in the express app and emit API
+module.exports.set = (app, emit) => {
+
+    app.get('/test', (req, res) => {
+       emit.getClients()[0].emit('alert', {
+            data: ['some', 'new', 'data']
+       });
+       res.json({success: true});
+    });
+
     /**
      * Handles showing the login page
      */
@@ -33,7 +43,7 @@ module.exports.set = app => {
                    errors: ['Incorrect Credentials Please Try Again.']
                })
             } else {
-                //Show a non-logged in user the signin page
+                //Show a non-logged in user the sign-in page
                 res.render('signin', {
                     errors: []
                 });
@@ -60,29 +70,35 @@ module.exports.set = app => {
      * Note: This is NOT secure
      */
     app.post('/signup', (req, res) => {
+        let filled = true;
+
         //Check through all the form fields make sure none are empty
         for(let prop in req.body) {
             if(req.body[prop].length === 0) {
+                filled = false;
                 res.render('register', {
                     errors: [`The Form field: ${prop} was left blank`]
                 })
             }
         }
 
-        //Check and make sure the the passwords are the same
-        if(req.body.password === req.body.confirm) {
-            users.create({
-                username: req.body.username,
-                password: bcrypt.hashSync(req.body.password, 10), //Notice how we hash the password before storing it
-                bio: '',
-                profile_picture: 'https://i.stack.imgur.com/l60Hf.png'
-            }).then(() => {
-               res.redirect('/login');
-            });
-        } else {
-            res.render('register', {
-                errors: ["Your Passwords must match!"]
-            })
+        if(filled) {
+            //Check and make sure the the passwords are the same
+            if(req.body.password === req.body.confirm) {
+                console.log(chalk.green(`Creating User -> ${req.body.username} \u2713`));
+                users.create({
+                    username: req.body.username,
+                    password: bcrypt.hashSync(req.body.password, 10), //Notice how we hash the password before storing it
+                    bio: '',
+                    profile_picture: 'https://i.stack.imgur.com/l60Hf.png'
+                }).then(() => {
+                    res.redirect('/login');
+                });
+            } else {
+                res.render('register', {
+                    errors: ["Your Passwords must match!"]
+                })
+            }
         }
     });
 
@@ -91,9 +107,12 @@ module.exports.set = app => {
      */
     app.post('/update/password', Auth.defend, (req, res) => {
 
+        let filled = true;
+
         //Checking that all the fields were filled out
         for(let prop in req.body) {
             if(req.body[prop].length === 0) {
+                filled = false;
                 res.render('profile', {
                     user: req.user,
                     errors: [`The Form field: ${prop} was left blank`],
@@ -102,24 +121,26 @@ module.exports.set = app => {
             }
         }
 
-
-        //We check that the passwords are the same
-        if(req.body.password === req.body.confirm) {
-            users.update({
-                password: bcrypt.hashSync(req.body.password, 10)
-            }, {where: {id: req.user.id}}).then(() => {
-               res.render('profile', {
-                   user: req.user,
-                   errors:[],
-                   success: ['Information saved successfully']
-               })
-            });
-        } else {
-            res.render('profile', {
-                user: req.user,
-                errors: [`The passwords must match!`],
-                success: []
-            })
+        if(filled) {
+            //We check that the passwords are the same
+            if(req.body.password === req.body.confirm) {
+                console.log(chalk.green(`Updating Users Password \u2713`));
+                users.update({
+                    password: bcrypt.hashSync(req.body.password, 10)
+                }, {where: {id: req.user.id}}).then(() => {
+                    res.render('profile', {
+                        user: req.user,
+                        errors:[],
+                        success: ['Information saved successfully']
+                    })
+                });
+            } else {
+                res.render('profile', {
+                    user: req.user,
+                    errors: [`The passwords must match!`],
+                    success: []
+                })
+            }
         }
     });
 
@@ -171,12 +192,11 @@ module.exports.set = app => {
 
     /**
      * Handles deleting an account
-     * todo This is extremely unsafe as any user can delete other users accounts
      */
-    app.get('/delete/:id', (req, res) => {
+    app.get('/delete/user', (req, res) => {
         users.destroy({
             where:{
-                id: req.params.id
+                id: req.user.id
             }
         }).then(() => {
            res.redirect('/logout');
