@@ -152,6 +152,7 @@ module.exports.set = (app, emit) => {
             users.update({
                 bio: req.body.bio
             }, {where: {id: req.user.id}}).then(() => {
+
                res.render('profile', {
                    user: req.user,
                    errors: [],

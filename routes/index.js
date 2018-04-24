@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Auth = require('./gateway');
-const { searches, users, alerts } = require('../models');
+const { searches } = require('../models');
 
 /**
  * Handles showing the Home page/index route

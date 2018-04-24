@@ -24,15 +24,24 @@ body {
   -webkit-backdrop-filter: saturate(180%) blur(20px);
   backdrop-filter: saturate(180%) blur(20px);
 }
-.site-header a {
+
+.site-header h5 {
   color:#b2bbbd;
-  font-size:16px;
   font-weight:bold;
   transition: ease-in-out color .15s;
 }
-.site-header a:hover {
+
+.site-header h5:hover {
   color: #333333;
   text-decoration: none;
+}
+
+.dropdown-toggle::after {
+  display:none
+}
+
+.dropdown-item {
+  color: #4b5658;
 }
 
 /*

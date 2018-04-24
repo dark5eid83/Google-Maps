@@ -12,7 +12,7 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const session = require("express-session");
 const passport = require('passport'), LocalStrategy = require('passport-local').Strategy;
-let {users} = require('./models');
+let {users, alerts} = require('./models');
 let WebsocketAPI = require('./src/emit');
 let emit = new WebsocketAPI();
 
@@ -46,17 +46,22 @@ app.use(express.static(path.join(__dirname, 'public')));
  * - tell passport (done(null, user)) when everything checks out
  */
 passport.use(new LocalStrategy(function(username, password, done) {
-        users.findOne({ where: {username} }).then(user => {
-                if (!user) {
-                    return done(null, false, { message: 'Incorrect username.' });
-                }
-                if (!users.validPassword(password, user.password)) {
-                    return done(null, false, { message: 'Incorrect password.' });
-                }
-                return done(null, user);
-        }).catch(err => {
-            done(null, false, { message: 'Incorrect credentials'})
-        });
+    users.all({where: {username: 'Foo'} ,include: [{model: alerts}]}).then(user => {
+
+        //We do this because user is an array by default but it should only return 1 element
+         user = user[0];
+
+        if (!user) {
+            return done(null, false, { message: 'Incorrect username.' });
+        }
+        if (!users.validPassword(password, user.password)) {
+            return done(null, false, { message: 'Incorrect password.' });
+        }
+
+        return done(null, user);
+    }).catch(err => {
+        done(null, false, { message: 'Incorrect credentials'})
+    });
     }
 ));
 
@@ -67,7 +72,8 @@ passport.serializeUser(function(user, done) {
 
 //Deserializes a user from the session
 passport.deserializeUser(function(id, done) {
-    users.findById(id).then(user => {
+    users.all({where: {id} ,include: [{model: alerts}]}).then(user => {
+        user = user[0];
        done(null, user);
     });
 });
@@ -115,18 +121,18 @@ io(server).on('connection', (socket) => {
     emit.addClient(socket);
 
 
-    /**
-     * Handles a websocket disconnecting from the server
-     */
-    socket.on('disconnect', () => {
+    socket.on('add-user', () => {
+        emit.addClient(socket);
+    });
+
+    socket.on('remove-user', () => {
         let index = _.findIndex(emit.getClients(), o => {
-           return o.id === socket.id
+            return o.id === socket.id
         });
 
         console.log(chalk.red('Client Disconnected to websocket. ❌'));
 
         emit.removeClient(index)
-
     });
 });
 
