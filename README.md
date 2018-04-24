@@ -48,6 +48,12 @@ Unit tests are still being written!
 - create the new ejs view in the `views/` directory
 - update links in the navbar/other pages to point to your route
 
+### Creating a new User and Logging In
+
+- To Create a new user go to the sign in page and submit the form!
+- Note: The database must be operational for this to work
+- You can login with your newly created credentials
+
 ## Deployment
 
 This application can be deployed onto any machine with Node 6.0.0 or greater is installed.
@@ -73,7 +79,8 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 ## Authors
 
-* **Christian Bartram** - *Initial work* - [Cbartram](https://github.com/cbartram)
+* **Jason Boykin** - *Project structure & Idea* - [dark5eid83](https://github.com/dark5eid83)
+* **Christian Bartram** - *Backend Work* - [Cbartram](https://github.com/cbartram)
 
 See also the list of [contributors](https://github.com/google-maps/contributors) who participated in this project.
 
@@ -84,3 +91,4 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 ## Acknowledgments
 
 * Jason for inspiring this project!
+* Bootstrap for some great components

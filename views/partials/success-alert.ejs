@@ -1,0 +1,14 @@
+<!--This is where all the success messages are located -->
+<div class="row mt-4">
+    <div class="col-md-4 offset-md-2">
+        <% success.forEach(s => {%>
+        <div class="alert alert-success" role="alert">
+            <h3>Success <span class="fas fa-check"></span></h3>
+            <hr>
+            <ul>
+                <li><%= s %></li>
+            </ul>
+        </div>
+        <% }) %>
+    </div>
+</div>

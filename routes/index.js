@@ -1,20 +1,19 @@
 const express = require('express');
 const router = express.Router();
 const Auth = require('./gateway');
-const { searches, users } = require('../models');
+const { searches, users, alerts } = require('../models');
 
 /**
  * Handles showing the Home page/index route
  */
 router.get('/', (req, res) => {
-    res.render('index');
+    res.render('index', {user: req.user});
 });
-
 
 /**
  * Handles showing the dashboard page
  */
-router.get('/dashboard', Auth.make, (req, res) => {
+router.get('/dashboard', Auth.defend, (req, res) => {
     if(!req.query.location) {
         req.query.location = 'China'; //Set default location if its not set
     }
@@ -32,6 +31,19 @@ router.get('/dashboard', Auth.make, (req, res) => {
             user: req.user
         });
     });
+});
+
+/**
+ * Shows the user profile page
+ *
+ * Must be behind the authentication gateway
+ */
+router.get('/profile', Auth.defend, (req, res) => {
+    res.render('profile', {
+        user: req.user,
+        errors: [],
+        success: []
+    })
 });
 
 
