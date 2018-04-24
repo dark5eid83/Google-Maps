@@ -17,7 +17,8 @@ let WebsocketAPI = require('./src/emit');
 let emit = new WebsocketAPI();
 
 const index = require('./routes/index');
-const controller = require('./routes/usersController');
+const userController = require('./routes/usersController');
+const alertController = require('./routes/alertController');
 
 const app = express();
 
@@ -83,7 +84,8 @@ passport.deserializeUser(function(id, done) {
  */
 app.use('/', index);
 app.post('/login', passport.authenticate('local', {successRedirect:'/dashboard', failureRedirect: '/login?error=true'}), (req, res) => res.redirect('/dashboard'));
-controller.set(app, emit);
+userController.set(app);
+alertController.set(app);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

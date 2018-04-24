@@ -19,7 +19,7 @@ let upload = multer({
 });
 
 //Passes in the express app and emit API
-module.exports.set = (app, emit) => {
+module.exports.set = app => {
 
     /**
      * Handles showing the login page
