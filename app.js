@@ -16,7 +16,6 @@ let {users} = require('./models');
 let WebsocketAPI = require('./src/emit');
 let emit = new WebsocketAPI();
 
-
 const index = require('./routes/index');
 const controller = require('./routes/usersController');
 
@@ -38,7 +37,6 @@ app.use(cookieParser());
 
 //Very important to serve all the files in the public directly statically!
 app.use(express.static(path.join(__dirname, 'public')));
-
 
 /**
  * Handles the authentication portion of a user

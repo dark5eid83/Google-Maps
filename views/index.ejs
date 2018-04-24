@@ -3,6 +3,7 @@
   <head>
     <title>Google Maps</title>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
@@ -52,11 +53,30 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script>
+        class Alert {
+            constructor() {
+
+            }
+
+            addAlert(id, message) {
+                $('#alert-menu').append(`<a class="dropdown-item" id="${id}" href="#">${message}</a>`)
+            }
+
+            removeAlert(id) {
+                $(`#${id}`).remove();
+            }
+
+        }
+
+
         $(document).ready(() => {
             const socket = io();
+            let alert = new Alert();
 
             socket.on('alert', (data) => {
-                console.log(data);
+                data.alerts.forEach((alert, index) => {
+                    alert.addAlert(index, alert.message);
+                })
             });
 
         });

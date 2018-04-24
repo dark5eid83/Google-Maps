@@ -11,7 +11,11 @@ module.exports = (sequelize, DataTypes) => {
   users.associate = function(models) {
      users.hasMany(models.searches, {
        foreignKey: 'user_id'
-     })
+     });
+
+     users.hasMany(models.alerts, {
+         foreignKey: 'user_id'
+     });
   };
 
   users.validPassword = function(testPass, dbPass) {

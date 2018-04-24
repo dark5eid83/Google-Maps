@@ -14,10 +14,6 @@ class Emit {
         this.clients = [];
     }
 
-    emit(socket, channel, message) {
-        socket.emit(channel, message);
-    }
-
     addClient(socket) {
         this.clients.push(socket);
     }
@@ -31,11 +27,11 @@ class Emit {
     }
 
     emitByIndex(index, channel, message) {
-        clients[index].emit(channel, message)
+        this.clients[index].emit(channel, message)
     }
 
     emitById(id, channel, message) {
-        clients[_.findIndex(this.clients, o => o.id === id)].emit(channel, message);
+        this.clients[_.findIndex(this.clients, o => o.id === id)].emit(channel, message);
     }
 
 }

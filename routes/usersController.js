@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const multer = require('multer');
 const path = require('path');
 const chalk = require('chalk');
-let {users} = require('../models');
+let {users, alerts} = require('../models');
 let upload = multer({
     fileFilter:(req, file, done) => {
         let filetypes = /jpeg|jpg|png|gif|tif/;
@@ -20,13 +20,6 @@ let upload = multer({
 
 //Passes in the express app and emit API
 module.exports.set = (app, emit) => {
-
-    app.get('/test', (req, res) => {
-       emit.getClients()[0].emit('alert', {
-            data: ['some', 'new', 'data']
-       });
-       res.json({success: true});
-    });
 
     /**
      * Handles showing the login page
@@ -91,8 +84,15 @@ module.exports.set = (app, emit) => {
                     password: bcrypt.hashSync(req.body.password, 10), //Notice how we hash the password before storing it
                     bio: '',
                     profile_picture: 'https://i.stack.imgur.com/l60Hf.png'
-                }).then(() => {
-                    res.redirect('/login');
+                }).then(user => {
+
+                    //After the user is created lets make an alert for them
+                    alerts.create({
+                       user_id: user.id,
+                       message: 'Welcome to Mappr!'
+                    }).then(() => {
+                        res.redirect('/login');
+                    });
                 });
             } else {
                 res.render('register', {
