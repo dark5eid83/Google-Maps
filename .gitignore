@@ -5,3 +5,4 @@ build/
 .DS_STORE
 .idea
 *.iml
+public/uploads/*

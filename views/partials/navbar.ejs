@@ -1,17 +1,38 @@
-<nav class="site-header sticky-top py-1">
-    <div class="container d-flex flex-column flex-md-row justify-content-between">
-        <a class="py-2" href="#">
-            <span class="fas fa-compass" style="font-size:22px;"></span>
-        </a>
-        <a class="py-2 d-none d-md-inline-block" href="/">Home</a>
-        <!--Show different links depending on user login status -->
+<div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 site-header">
+    <h5 class="my-0 mr-md-auto mt-2 ml-3">Mappr</h5>
+    <nav class="my-2 my-md-0 mr-md-3">
         <% if(typeof user === "undefined") {%>
-        <a class="py-2 d-none d-md-inline-block" href="/login">Login</a>
-        <a class="py-2 d-none d-md-inline-block" href="/signup">Signup</a>
+        <a class="py-2 pr-2 text-light" href="/login">Login</a>
+        <a class="py-2 text-light" href="/signup">Signup</a>
         <% } else { %>
-        <a class="py-2 d-none d-md-inline-block" href="/dashboard">Dashboard</a>
-        <a class="py-2 d-none d-md-inline-block" href="/profile">Profile</a>
-        <a class="py-2 d-none d-md-inline-block" href="/logout">Logout</a>
-        <% } %>
+        <div class="dropdown">
+            <a class="dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="fa fa-bell" style="margin-top:10px; color:#b2bbbd; font-size:20px"></span>
+                <% if(user.alerts.length > 0) { %>
+                <span class="badge badge-danger" style="border-radius:50%"><%= user.alerts.length %></span>
+                <% } %>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right alert-dropdown-menu" id="alert-menu" aria-labelledby="dropdownMenuButton">
+                <h5 class="dropdown-item">Alerts</h5>
+                <hr>
+                <% user.alerts.forEach(alert => {%>
+                <a class="dropdown-item" href="/delete/alert/<%= alert.id %>"><i class="fas fa-eye-slash"></i> <%= alert.message %></a>
+                <% }) %>
+            </div>
+        </div>
+    </nav>
+    <div class="dropdown mr-4">
+        <a class="dropdown-toggle" style="" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <img style="border: 1px solid #b2bbbd; padding:4px; border-radius:50%" height="50" width="50" src="<%= user.profile_picture %>">
+        </a>
+        <div class="dropdown-menu dropdown-menu-right user-dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <h5 class="dropdown-item">Welcome, <%= user.username %></h5>
+            <hr>
+            <a class="dropdown-item" href="/dashboard"><i class="fas fa-chart-line"></i> Dashboard</a>
+            <a class="dropdown-item" href="/profile"><i class="fas fa-user"></i> Profile</a>
+            <a class="dropdown-item" href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+
+        </div>
     </div>
-</nav>
+    <% } %>
+</div>

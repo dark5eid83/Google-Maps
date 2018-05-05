@@ -3,24 +3,34 @@
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
+const chalk = require('chalk');
+const http = require('http');
+const _ = require('lodash');
+const io = require('socket.io');
+const port = process.env.PORT || '3000';
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const session = require("express-session");
 const passport = require('passport'), LocalStrategy = require('passport-local').Strategy;
-let {users} = require('./models');
+let {users, alerts} = require('./models');
+let WebsocketAPI = require('./src/emit');
+let emit = new WebsocketAPI();
 
 const index = require('./routes/index');
-const controller = require('./routes/authController');
+const userController = require('./routes/usersController');
+const alertController = require('./routes/alertController');
 
 const app = express();
 
 // view engine setup
+app.set('port', port);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 app.use(bodyParser.json());
 app.use(session({ secret: process.env.EXPRESS_SESSION_SECRET, resave: true, saveUninitialized: true }));
 app.use(bodyParser.urlencoded({ extended: false }));
+
 //We initialize our passport sessions here
 app.use(passport.initialize());
 app.use(passport.session());
@@ -28,7 +38,6 @@ app.use(cookieParser());
 
 //Very important to serve all the files in the public directly statically!
 app.use(express.static(path.join(__dirname, 'public')));
-
 
 /**
  * Handles the authentication portion of a user
@@ -38,17 +47,22 @@ app.use(express.static(path.join(__dirname, 'public')));
  * - tell passport (done(null, user)) when everything checks out
  */
 passport.use(new LocalStrategy(function(username, password, done) {
-        users.findOne({ where: {username} }).then(user => {
-                if (!user) {
-                    return done(null, false, { message: 'Incorrect username.' });
-                }
-                if (!users.validPassword(password, user.password)) {
-                    return done(null, false, { message: 'Incorrect password.' });
-                }
-                return done(null, user);
-        }).catch(err => {
-            done(null, false, { message: 'Incorrect credentials'})
-        });
+    users.all({where: {username: 'Foo'} ,include: [{model: alerts}]}).then(user => {
+
+        //We do this because user is an array by default but it should only return 1 element
+         user = user[0];
+
+        if (!user) {
+            return done(null, false, { message: 'Incorrect username.' });
+        }
+        if (!users.validPassword(password, user.password)) {
+            return done(null, false, { message: 'Incorrect password.' });
+        }
+
+        return done(null, user);
+    }).catch(err => {
+        done(null, false, { message: 'Incorrect credentials'})
+    });
     }
 ));
 
@@ -59,7 +73,8 @@ passport.serializeUser(function(user, done) {
 
 //Deserializes a user from the session
 passport.deserializeUser(function(id, done) {
-    users.findById(id).then(user => {
+    users.all({where: {id} ,include: [{model: alerts}]}).then(user => {
+        user = user[0];
        done(null, user);
     });
 });
@@ -68,8 +83,9 @@ passport.deserializeUser(function(id, done) {
  * Routes for the pages and handling users logging in
  */
 app.use('/', index);
-app.post('/login', passport.authenticate('local'), (req, res) => res.redirect('/dashboard'));
-controller.set(app);
+app.post('/login', passport.authenticate('local', {successRedirect:'/dashboard', failureRedirect: '/login?error=true'}), (req, res) => res.redirect('/dashboard'));
+userController.set(app);
+alertController.set(app);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
@@ -89,4 +105,36 @@ app.use((err, req, res, next) => {
   res.render('error');
 });
 
-module.exports = app;
+let server = http.createServer(app);
+server.listen(port);
+
+server.on('listening', () => {
+    let addr = server.address();
+    let bind = typeof addr === 'string'
+        ? 'pipe ' + addr
+        : 'port ' + addr.port;
+    console.log(chalk.blue(`-----------------------------`));
+    console.log(chalk.blue(`Server Listening on ${bind}`));
+    console.log(chalk.blue(`-----------------------------`));
+});
+
+io(server).on('connection', (socket) => {
+    console.log(chalk.green('Client connected to websocket. \u2713'));
+    emit.addClient(socket);
+
+
+    socket.on('add-user', () => {
+        emit.addClient(socket);
+    });
+
+    socket.on('remove-user', () => {
+        let index = _.findIndex(emit.getClients(), o => {
+            return o.id === socket.id
+        });
+
+        console.log(chalk.red('Client Disconnected to websocket. ❌'));
+
+        emit.removeClient(index)
+    });
+});
+
