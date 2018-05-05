@@ -30,7 +30,7 @@
                     <h5 class="mt-4">Your Searches</h5>
                     <ul class="list-group">
                         <% searches.forEach(search => {%>
-                        <li class="list-group-item"><span class="fas fa-compass"></span> <%= search.name %></li>
+                        <li class="list-group-item"><span class="fas fa-compass"></span> <a href="/dashboard?location=<%= search.name %>"><%= search.name %></a></li>
                         <% })%>
                     </ul>
                 </div>
