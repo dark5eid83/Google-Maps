@@ -8,21 +8,14 @@ import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
 import registerServiceWorker from './registerServiceWorker';
 
 
-const defend = () => {
-    if(localStorage.getItem('token') !== null) {
-        return true
-    } else {
-        return false;
-    }
-};
-
+const defend = () => localStorage.getItem('token') !== null;
 
 ReactDOM.render(
     <BrowserRouter>
         <Switch>
             <Route exact path="/" component={App} />
             <Route exact path="/login" component={Login} />
-            <Route exact path="/dashboard" render={() =>(defend() ? (<Dashboard />) : (<Redirect to="/login"/> ))} />
+            <Route exact path="/dashboard" render={() =>(defend() ? (<Dashboard />) : (<Redirect to="/login" /> ))} />
         </Switch>
     </BrowserRouter>, document.getElementById('root'));
 registerServiceWorker();

@@ -4,6 +4,14 @@
 class Auth {
 
     /**
+     * Returns true if the user is logged in and false otherwise
+     * @returns {boolean}
+     */
+    static isLoggedIn() {
+        return localStorage.getItem('token') !== null;
+    }
+
+    /**
      * Handles requesting the server for a new token
      * @param username
      * @param password
