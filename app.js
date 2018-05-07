@@ -7,10 +7,12 @@ const chalk = require('chalk');
 const http = require('http');
 const _ = require('lodash');
 const io = require('socket.io');
+const jwt = require('jsonwebtoken');
 const port = process.env.PORT || '3000';
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const session = require("express-session");
+const cors = require('cors');
 const passport = require('passport'), LocalStrategy = require('passport-local').Strategy;
 let {users, alerts} = require('./models');
 let WebsocketAPI = require('./src/emit');
@@ -27,6 +29,7 @@ app.set('port', port);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
+app.use(cors());
 app.use(bodyParser.json());
 app.use(session({ secret: process.env.EXPRESS_SESSION_SECRET, resave: true, saveUninitialized: true }));
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -47,6 +50,7 @@ app.use(express.static(path.join(__dirname, 'public')));
  * - tell passport (done(null, user)) when everything checks out
  */
 passport.use(new LocalStrategy(function(username, password, done) {
+    console.log('hit');
     users.all({where: {username: 'Foo'} ,include: [{model: alerts}]}).then(user => {
 
         //We do this because user is an array by default but it should only return 1 element
@@ -66,24 +70,53 @@ passport.use(new LocalStrategy(function(username, password, done) {
     }
 ));
 
-//Serializes a user to the session
-passport.serializeUser(function(user, done) {
-    done(null, user.id);
-});
+/**
+ * Handles serializing a user to the express session
+ * @param req
+ * @param res
+ * @param next
+ */
+const serialize = (req, res, next) => {
+    req.token = jwt.sign({
+        id: req.user.id,
+    }, process.env.EXPRESS_SESSION_SECRET);
+    next();
+};
 
-//Deserializes a user from the session
-passport.deserializeUser(function(id, done) {
-    users.all({where: {id} ,include: [{model: alerts}]}).then(user => {
-        user = user[0];
-       done(null, user);
-    });
-});
+/**
+ * De-serializes a user from the session
+ * @param req
+ * @param res
+ * @param next
+ */
+const deserialize = (req, res, next) => {
+  jwt.verify(req.body.token, process.env.EXPRESS_SESSION_SECRET, (err, user) => {
+      if(err !== null) {
+          res.json({
+              message: 'Invalid JWT Token'
+          });
+          next();
+      } else {
+          users.findById(user.id).then(user => {
+              res.json({
+                  user
+              });
+              next();
+          });
+      }
+  });
+};
 
 /**
  * Routes for the pages and handling users logging in
  */
 app.use('/', index);
-app.post('/login', passport.authenticate('local', {successRedirect:'/dashboard', failureRedirect: '/login?error=true'}), (req, res) => res.redirect('/dashboard'));
+app.post('/auth',
+    [passport.authenticate('local', { session: false }), serialize ],
+    (req, res) => res.status(200).json({token: req.token}));
+app.post('/deserialize', deserialize);
+
+
 userController.set(app);
 alertController.set(app);
 

@@ -10,6 +10,21 @@ router.get('/', (req, res) => {
     res.render('index', {user: req.user});
 });
 
+router.get('/auth', (req, res) => {
+   if(req.user) {
+       console.log(req);
+       res.json({
+           user: req.user,
+           auth: true,
+       });
+   } else {
+       res.json({
+           user: null,
+           auth: false
+       })
+   }
+});
+
 /**
  * Handles showing the dashboard page
  */
