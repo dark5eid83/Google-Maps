@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import './style.css';
 import Navbar from "../../Navbar/Navbar";
+import Container from "../../Container/Container";
 
 
 export default class Login extends Component {
     render() {
         return(
-            <div className="container-fluid">
-                <Navbar/>
+            <Container>
+                <Navbar />
 
                 <div className="row justify-content-center">
                     <div className="col-md-8">
@@ -22,7 +23,7 @@ export default class Login extends Component {
                         </form>
                     </div>
                 </div>
-            </div>
+            </Container>
         )
     }
 }
