@@ -12,12 +12,10 @@ export default class Navbar extends Component {
         }
     }
 
-
     componentDidMount = async () => {
         if(Auth.isLoggedIn()) {
-            let response =  await Auth.deserialize(localStorage.getItem('token'));
-            console.log(response);
-            this.setState({user: response.user});
+            let user = await Auth.deserialize(localStorage.getItem('token'));
+            this.setState({ user });
         }
     };
 

@@ -13,6 +13,7 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const session = require("express-session");
 const cors = require('cors');
+const Auth = require('./routes/gateway');
 const passport = require('passport'), LocalStrategy = require('passport-local').Strategy;
 let {users, alerts} = require('./models');
 let WebsocketAPI = require('./src/emit');
@@ -79,50 +80,16 @@ passport.deserializeUser(function(id, done) {
     users.findById(id).then(user => done(null, user));
 });
 
-/**
- * Handles serializing a user to the express session
- * @param req
- * @param res
- * @param next
- */
-const serialize = (req, res, next) => {
-    req.token = jwt.sign({
-        id: req.user.id,
-    }, process.env.EXPRESS_SESSION_SECRET);
-    next();
-};
-
-/**
- * De-serializes a user from the session
- * @param req
- * @param res
- * @param next
- */
-const deserialize = (req, res, next) => {
-  jwt.verify(req.body.token, process.env.EXPRESS_SESSION_SECRET, (err, user) => {
-      console.log("Custom Deserialize -> ", err, user);
-      if(err !== null) {
-          res.tokenUser = null;
-          next();
-      } else {
-          users.findById(user.id).then(user => {
-              req.tokenUser = user;
-              next();
-          });
-      }
-  });
-};
 
 /**
  * Routes for the pages and handling users logging in
  */
-app.use('/', index);
-app.use('/api/v1', apiController);
-app.post('/deserialize', deserialize, (req, res) => res.json(req.tokenUser));
-app.post('/auth', [passport.authenticate('local', { failureRedirect: '/auth' }), serialize], (req, res) => {
+app.post('/deserialize', Auth.deserializePost, (req, res) => res.json(req.tokenUser));
+app.post('/auth', [passport.authenticate('local', { failureRedirect: '/auth' }), Auth.serialize], (req, res) => {
     res.status(200).json({token: req.token})
 });
-
+app.use('/', index);
+app.use('/api/v1', apiController);
 
 userController.set(app);
 alertController.set(app);

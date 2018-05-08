@@ -14,14 +14,14 @@ export default class Dashboard extends Component {
     }
 
     componentDidMount = async () => {
-      let res = await Auth.deserialize(localStorage.getItem('token'));
+      let user = await Auth.deserialize(localStorage.getItem('token'));
 
       //Get users current searches
-      let searches = await fetch('/api/v1/searches').then(search => search.json());
+      let searches = await fetch(`/api/v1/searches?token=${localStorage.getItem('token')}`)
+          .then(search => search.json())
+          .then(search => search.searches);
 
-      console.log("Searches", searches);
-
-      this.setState({user: res.user, searches});
+      this.setState({ user, searches });
     };
 
 
@@ -44,8 +44,12 @@ export default class Dashboard extends Component {
                                 <h5 className="mt-4">Your Searches</h5>
                                 <ul className="list-group">
                                     {
-                                        this.state.searches.map(search => {
-                                            return <li className="list-group-item"><span className="fas fa-compass" /> <a href="/dashboard?location=<%= search.name %>">{search.name}</a></li>
+                                        this.state.searches.map((search, id) => {
+                                            return (
+                                            <li className="list-group-item" key={id}>
+                                                <span className="fas fa-compass" />
+                                                <a href="/dashboard?location=<%= search.name %>">{search.name}</a>
+                                            </li>);
                                         })
                                     }
                                 </ul>
