@@ -21,6 +21,7 @@ let emit = new WebsocketAPI();
 const index = require('./routes/index');
 const userController = require('./routes/usersController');
 const alertController = require('./routes/alertController');
+const apiController = require('./routes/apiController');
 
 const app = express();
 
@@ -69,6 +70,16 @@ passport.use(new LocalStrategy(function(username, password, done) {
     }
 ));
 
+passport.serializeUser(function(user, done) {
+    console.log("Passport Serialize -> ", user);
+    done(null, user.id);
+});
+
+passport.deserializeUser(function(id, done) {
+    console.log("Passport Deserialize -> ", id);
+    users.findById(id).then(user => done(null, user));
+});
+
 /**
  * Handles serializing a user to the express session
  * @param req
@@ -106,7 +117,8 @@ const deserialize = (req, res, next) => {
  * Routes for the pages and handling users logging in
  */
 app.use('/', index);
-app.post('/auth', [passport.authenticate('local', { session: false, failureRedirect: '/auth' }), serialize ], (req, res) => {
+app.use('/api/v1', apiController);
+app.post('/auth', [passport.authenticate('local', { failureRedirect: '/auth' }), serialize], (req, res) => {
     res.status(200).json({token: req.token, user: req.user})
 });
 app.post('/deserialize', deserialize, (req, res) => res.json({user: req.user}));
