@@ -10,6 +10,7 @@ router.get('/denied', (req, res) => {
 });
 
 router.get('/searches', Auth.deserializeGet, (req, res) => {
+    console.log("User -> ", req.user);
     console.log("Finding users searches -> ", req.tokenUser.id);
     searches.findAll({
         where: {

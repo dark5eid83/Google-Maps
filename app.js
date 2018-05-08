@@ -32,16 +32,12 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 app.use(cors());
-app.use(bodyParser.json());
-app.use(session({ secret: process.env.EXPRESS_SESSION_SECRET, resave: true, saveUninitialized: true }));
-app.use(bodyParser.urlencoded({ extended: false }));
-
-//We initialize our passport sessions here
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(cookieParser());
-
-//Very important to serve all the files in the public directly statically!
+app.use(bodyParser.json());
+app.use(session({ secret: process.env.EXPRESS_SESSION_SECRET, resave: true, saveUninitialized: true }));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 /**
@@ -80,12 +76,12 @@ passport.deserializeUser(function(id, done) {
     users.findById(id).then(user => done(null, user));
 });
 
-
 /**
  * Routes for the pages and handling users logging in
  */
 app.post('/deserialize', Auth.deserializePost, (req, res) => res.json(req.tokenUser));
 app.post('/auth', [passport.authenticate('local', { failureRedirect: '/auth' }), Auth.serialize], (req, res) => {
+    console.log(req.user);
     res.status(200).json({token: req.token})
 });
 app.use('/', index);

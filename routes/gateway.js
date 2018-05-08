@@ -9,7 +9,10 @@ module.exports = {
     defend: (req, res, next) => req.user ? next() : res.redirect("/api/v1/denied"),
 
     /**
-     * Handles serializing a user to the express session
+     * Handles serializing a user to the express session.
+     *
+     * This method will create a token property onto the request object which is a
+     * signed JWT Token representing the user.
      * @param req
      * @param res
      * @param next
@@ -23,6 +26,9 @@ module.exports = {
 
     /**
      * De-serializes a user from the session using a post body
+     *
+     * This method will deserialize a user from the post body and will use the JWT token to
+     * identify a user in the database
      * @param req
      * @param res
      * @param next
