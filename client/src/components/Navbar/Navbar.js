@@ -38,7 +38,7 @@ export default class Navbar extends Component {
                 </nav>
                 <div className="dropdown mr-4">
                     <a className="dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <img style={{border: '1px solid #b2bbbd', padding:'4px', borderRadius:'50%'}} height="50" width="50" src={this.state.user.profile_picture} />
+                        <img alt="Logo" style={{border: '1px solid #b2bbbd', padding:'4px', borderRadius:'50%'}} height="50" width="50" src={this.state.user.profile_picture} />
                     </a>
                     <div className="dropdown-menu dropdown-menu-right user-dropdown-menu" aria-labelledby="dropdownMenuButton">
                         <h5 className="dropdown-item">Welcome, {this.state.user.username}</h5>

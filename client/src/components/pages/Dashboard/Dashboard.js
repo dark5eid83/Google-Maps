@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Navbar from "../../Navbar/Navbar";
 import Auth from "../../../Auth";
 import Container from "../../Container/Container";
 
@@ -18,9 +17,9 @@ export default class Dashboard extends Component {
       let res = await Auth.deserialize(localStorage.getItem('token'));
 
       //Get users current searches
-      let searches = await fetch('/api/v1/searches').then(res => res.json());
+      let searches = await fetch('/api/v1/searches').then(search => search.json());
 
-      console.log(searches);
+      console.log("Searches", searches);
 
       this.setState({user: res.user, searches});
     };
@@ -56,7 +55,7 @@ export default class Dashboard extends Component {
                     </div>
                     <div className="col-6">
                         <div className="iframe-wrapper">
-                            <iframe width="600" height="450" style={{border:0}} src="https://www.google.com/maps/embed/v1/place?key=AIzaSyASw-R8rAV9wcEfdF6Wo42kp54-5jErfQk&q=Virginia" allowFullScreen />
+                            <iframe title="Google Maps" width="600" height="450" style={{border:0}} src="https://www.google.com/maps/embed/v1/place?key=AIzaSyASw-R8rAV9wcEfdF6Wo42kp54-5jErfQk&q=Virginia" allowFullScreen />
                         </div>
                     </div>
                 </div>

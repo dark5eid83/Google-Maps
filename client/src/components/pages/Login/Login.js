@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './style.css';
 import Auth from '../../../Auth';
-import Navbar from "../../Navbar/Navbar";
 import Container from "../../Container/Container";
 
 
@@ -32,8 +31,9 @@ export default class Login extends Component {
               console.log("Incorrect Username or Password!")
           } else {
               console.log("We are good!");
-              localStorage.setItem('token', res.token);
-              window.location = '/dashboard';
+              console.log(res);
+               localStorage.setItem('token', res.token);
+               window.location = '/dashboard';
           }
       });
     };

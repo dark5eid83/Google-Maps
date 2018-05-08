@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
-import Navbar from './components/Navbar/Navbar';
-import Auth from './Auth';
 import './App.css';
-import Footer from "./components/Footer/Footer";
 import Container from "./components/Container/Container";
 
 

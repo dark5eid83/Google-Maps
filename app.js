@@ -71,7 +71,6 @@ passport.use(new LocalStrategy(function(username, password, done) {
 ));
 
 passport.serializeUser(function(user, done) {
-    console.log("Passport Serialize -> ", user);
     done(null, user.id);
 });
 
@@ -101,6 +100,7 @@ const serialize = (req, res, next) => {
  */
 const deserialize = (req, res, next) => {
   jwt.verify(req.body.token, process.env.EXPRESS_SESSION_SECRET, (err, user) => {
+      console.log("Custom Deserialize -> ", err, user);
       if(err !== null) {
           res.tokenUser = null;
           next();
@@ -118,10 +118,10 @@ const deserialize = (req, res, next) => {
  */
 app.use('/', index);
 app.use('/api/v1', apiController);
+app.post('/deserialize', deserialize, (req, res) => res.json(req.tokenUser));
 app.post('/auth', [passport.authenticate('local', { failureRedirect: '/auth' }), serialize], (req, res) => {
-    res.status(200).json({token: req.token, user: req.user})
+    res.status(200).json({token: req.token})
 });
-app.post('/deserialize', deserialize, (req, res) => res.json({user: req.user}));
 
 
 userController.set(app);
