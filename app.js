@@ -50,21 +50,20 @@ app.use(express.static(path.join(__dirname, 'public')));
  * - tell passport (done(null, user)) when everything checks out
  */
 passport.use(new LocalStrategy(function(username, password, done) {
-    console.log('hit');
-    users.all({where: {username: 'Foo'} ,include: [{model: alerts}]}).then(user => {
-
-        //We do this because user is an array by default but it should only return 1 element
-         user = user[0];
+    users.all({where: {username} ,include: [{model: alerts}]}).spread(user => {
 
         if (!user) {
+            console.log("No User found");
             return done(null, false, { message: 'Incorrect username.' });
         }
         if (!users.validPassword(password, user.password)) {
+            console.log("Invalid user password");
             return done(null, false, { message: 'Incorrect password.' });
         }
 
         return done(null, user);
     }).catch(err => {
+        console.log("Error", err);
         done(null, false, { message: 'Incorrect credentials'})
     });
     }
@@ -92,15 +91,11 @@ const serialize = (req, res, next) => {
 const deserialize = (req, res, next) => {
   jwt.verify(req.body.token, process.env.EXPRESS_SESSION_SECRET, (err, user) => {
       if(err !== null) {
-          res.json({
-              message: 'Invalid JWT Token'
-          });
+          res.user = null;
           next();
       } else {
           users.findById(user.id).then(user => {
-              res.json({
-                  user
-              });
+              req.user = user;
               next();
           });
       }
@@ -111,10 +106,10 @@ const deserialize = (req, res, next) => {
  * Routes for the pages and handling users logging in
  */
 app.use('/', index);
-app.post('/auth',
-    [passport.authenticate('local', { session: false }), serialize ],
-    (req, res) => res.status(200).json({token: req.token}));
-app.post('/deserialize', deserialize);
+app.post('/auth', [passport.authenticate('local', { session: false, failureRedirect: '/auth' }), serialize ], (req, res) => {
+    res.status(200).json({token: req.token, user: req.user})
+});
+app.post('/deserialize', deserialize, (req, res) => res.json({user: req.user}));
 
 
 userController.set(app);

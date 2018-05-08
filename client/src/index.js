@@ -9,13 +9,12 @@ import registerServiceWorker from './registerServiceWorker';
 
 
 const defend = () => localStorage.getItem('token') !== null;
-
 ReactDOM.render(
     <BrowserRouter>
         <Switch>
             <Route exact path="/" component={App} />
-            <Route exact path="/login" component={Login} />
-            <Route exact path="/dashboard" render={() =>(defend() ? (<Dashboard />) : (<Redirect to="/login" /> ))} />
+            <Route exact path="/login" render={() => defend() ? <Dashboard/> : <Login/> } />
+            <Route exact path="/dashboard" render={() =>defend() ? <Dashboard /> : <Redirect to="/login" />} />
         </Switch>
     </BrowserRouter>, document.getElementById('root'));
 registerServiceWorker();
