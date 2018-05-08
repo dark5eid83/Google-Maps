@@ -41,8 +41,6 @@ export default class Login extends Component {
     render() {
         return(
             <Container>
-                <Navbar />
-
                 <div className="row justify-content-center mt-4">
                     <div className="col-md-5">
                         <form className="form-signin">

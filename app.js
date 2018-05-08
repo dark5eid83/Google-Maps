@@ -102,11 +102,11 @@ const serialize = (req, res, next) => {
 const deserialize = (req, res, next) => {
   jwt.verify(req.body.token, process.env.EXPRESS_SESSION_SECRET, (err, user) => {
       if(err !== null) {
-          res.user = null;
+          res.tokenUser = null;
           next();
       } else {
           users.findById(user.id).then(user => {
-              req.user = user;
+              req.tokenUser = user;
               next();
           });
       }

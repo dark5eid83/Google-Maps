@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Navbar from "../../Navbar/Navbar";
 import Auth from "../../../Auth";
+import Container from "../../Container/Container";
 
 
 export default class Dashboard extends Component {
@@ -27,9 +28,7 @@ export default class Dashboard extends Component {
 
     render() {
         return(
-            <div>
-                <Navbar/>
-
+            <Container>
                 <div className="row justify-content-center mt-4">
                     <div className="col-3 offset-1">
                         <h5>Search Google Maps</h5>
@@ -61,7 +60,7 @@ export default class Dashboard extends Component {
                         </div>
                     </div>
                 </div>
-            </div>
+            </Container>
         )
     }
 }
